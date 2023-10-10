@@ -1,0 +1,6 @@
+framework module Pods_DoubleCVPractice {
+  umbrella header "Pods-DoubleCVPractice-umbrella.h"
+
+  export *
+  module * { export * }
+}
