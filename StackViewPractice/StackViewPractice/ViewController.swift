@@ -27,7 +27,10 @@ class ViewController: UIViewController {
         $0.layer.cornerRadius = 20
         $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapWeatherView)))
     }
-    
+    let cloudImgContainerView = UIView().then {
+        $0.backgroundColor = .clear
+    }
+
     /// 좌측 상단 도시명, 현재기온을 포함한 수직 스택뷰
     lazy var leftStackView = UIStackView().then {
 //        $0.backgroundColor = .green
@@ -35,20 +38,21 @@ class ViewController: UIViewController {
         $0.axis = .vertical
         $0.distribution = .fill
         $0.alignment = .leading
-        $0.spacing = 0
+        $0.spacing = 5
     }
     
     /// 우측 상단 오늘 날씨와 최고,최저 기온을 포함한 수직 스택뷰
     let cloudImgView = UIImageView(image: UIImage(systemName: "cloud.fill")).then {
         $0.tintColor = .white
+        $0.contentMode = .scaleAspectFill
     }
     lazy var rightStackView = UIStackView().then {
 //        $0.backgroundColor = .blue
-        let stackView = UIStackView(arrangedSubviews: [cloudImgView, rightTitleLabel1, rightTitleLabel2])
+        let stackView = UIStackView(arrangedSubviews: [cloudImgContainerView, rightTitleLabel1, rightTitleLabel2])
         $0.axis = .vertical
         $0.distribution = .fill
         $0.alignment = .trailing
-        $0.spacing = 3
+//        $0.spacing = 3
     }
     
     
@@ -67,7 +71,7 @@ class ViewController: UIViewController {
     
     // labels
     lazy var leftTitleLabel1 = getLabelView(titleStr: "서울특별시", fontSize: 20.0, fontWeight: .bold, fontColor: .white)
-    lazy var leftTitleLabel2 = getLabelView(titleStr: "9°", fontSize: 40.0, fontWeight: .medium, fontColor: .white)
+    lazy var leftTitleLabel2 = getLabelView(titleStr: "9°", fontSize: 45.0, fontWeight: .regular, fontColor: .white)
     lazy var rightTitleLabel1 = getLabelView(titleStr: "대체로 흐림", fontSize: 18.0, fontWeight: .medium, fontColor: .white)
     lazy var rightTitleLabel2 = getLabelView(titleStr: "최고: 21° 최저 7°", fontSize: 18.0, fontWeight: .medium, fontColor: .white)
     
@@ -98,7 +102,8 @@ class ViewController: UIViewController {
         leftStackView.addArrangedSubview(leftTitleLabel1)
         leftStackView.addArrangedSubview(leftTitleLabel2)
         
-        rightStackView.addArrangedSubview(cloudImgView)
+        cloudImgContainerView.addSubview(cloudImgView)
+        rightStackView.addArrangedSubview(cloudImgContainerView)
         
         rightStackView.addArrangedSubview(rightTitleLabel1)
         rightStackView.addArrangedSubview(rightTitleLabel2)
@@ -120,7 +125,14 @@ class ViewController: UIViewController {
         }
         
         cloudImgView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
+//            make.center.equalToSuperview()
+            make.top.bottom.leading.trailing.equalToSuperview()
+        }
+        cloudImgContainerView.snp.makeConstraints { make in
+//            make.height.equalTo(35)
+        }
+        rightTitleLabel1.snp.makeConstraints { make in
+            make.top.equalTo(cloudImgView.snp.bottom).offset(20)
         }
         rightStackView.snp.makeConstraints { make in
             make.top.trailing.equalToSuperview().inset(15)
